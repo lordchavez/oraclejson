@@ -53,7 +53,7 @@ public class HelloController {
 	@RequestMapping( value = "/in", method = RequestMethod.GET )
 	public ModelAndView insertJson() {
 		
-		Boolean result = clienteService.updateJson();
+		Boolean result = clienteService.insertJson();
 		return new ModelAndView( "welcome" ).addObject( "content", result );
 	}
 

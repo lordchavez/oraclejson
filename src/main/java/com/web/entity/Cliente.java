@@ -6,6 +6,7 @@ import java.sql.Clob;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -21,8 +22,10 @@ public class Cliente implements Serializable {
 	private static final long serialVersionUID = -1228757290851743172L;
 	
 	@Id
-	@GeneratedValue
 	@Column(name = "ID")
+	@GeneratedValue(
+	        strategy = GenerationType.SEQUENCE
+	    )
 	private Long id;
 	
 	@Column(name = "ITEM")

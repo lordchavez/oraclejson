@@ -38,9 +38,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.web.entity.Cliente;
-import com.web.entity.ClienteVO;
+import com.web.entity.ClientePO;
 import com.web.repository.ClienteRepository;
 
+/**
+ * @author Dulce Mendoza
+ *
+ */
 @Repository
 public class ClienteServiceImpl implements ClienteService {
 
@@ -85,29 +89,31 @@ public class ClienteServiceImpl implements ClienteService {
 		
 		System.out.println("updateJosn Started");
 		Cliente cliente = clienteRepository.findOne( 123L );
-		Cliente updateClient = new Cliente();
+//		Cliente updateClient = new Cliente();
 		
 		ObjectMapper objectMapper = new ObjectMapper();
-		ClienteVO cvo = new ClienteVO();
+		ClientePO cpo = new ClientePO();
 		try {
 			// JSON to Object
 			String clobStr = cliente.getItem().getSubString( 1, ( int ) cliente.getItem().length() );
-			cvo = objectMapper.readValue( clobStr, ClienteVO.class );
-			System.out.println( "CVO.getFirst_Name=" + cvo.getFirst_name() );
-			cvo.setFirst_name("Terminator");
-			System.out.println( "CVO.getFirst_Name=" + cvo.getFirst_name() );
+			cpo = objectMapper.readValue( clobStr, ClientePO.class );
+			System.out.println( "CVO.getFirst_Name=" + cpo.getFirst_name() );
+			cpo.setFirst_name("Terminator");
+			System.out.println( "CVO.getFirst_Name=" + cpo.getFirst_name() );
 			
 			// JSON to Map
 			Map<String, Object> map = objectMapper.readValue( clobStr, new TypeReference<Map<String,Object>>(){});
 			map.entrySet().stream().forEach( e -> System.out.println( e ) );
 			
 			// POJO to JSON
-			byte[] writeValueAsBytes = objectMapper.writeValueAsBytes( cvo );
+			byte[] writeValueAsBytes = objectMapper.writeValueAsBytes( cpo );
 			String jsonStr = new String( writeValueAsBytes, StandardCharsets.UTF_8 );
 			System.out.println( jsonStr );
 			
-			updateClient.setId( cliente.getId() );
-			updateClient.setItem( ClobProxy.generateProxy( jsonStr ) );
+//			updateClient.setId( cliente.getId() );
+//			updateClient.setItem( ClobProxy.generateProxy( jsonStr ) );
+			
+			cliente.setItem( ClobProxy.generateProxy( jsonStr ) );
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -117,7 +123,7 @@ public class ClienteServiceImpl implements ClienteService {
 			e.printStackTrace();
 		} 
 		
-		clienteRepository.saveAndFlush( updateClient );
+		clienteRepository.saveAndFlush( cliente );
 		System.out.println("updateJosn Finished");
 		return false;
 	}
@@ -126,9 +132,41 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public Boolean insertJson() {
 		System.out.println("insertJson Started");
-		clienteRepository.insertJson();
+		
+		ClientePO cpo = new ClientePO();
+		cpo.setId( 3L );
+		cpo.setFirst_name( "Robocop" );
+		cpo.setLast_name( "Murphy" );
+		cpo.setEmail( "robo@cop.com" );
+		cpo.setGender( "Male" );
+		cpo.setAge( 33 );
+		
+		Cliente cliente = new Cliente();
+		cliente.setId( 125L );
+		cliente.setItem( ClobProxy.generateProxy( pojoToJson( cpo ) ) );
+		
+		clienteRepository.saveAndFlush( cliente );
 		System.out.println("insertJson Finished");
-		return false;
+		return true;
+	}
+	
+	
+	/**
+	 * @param obj
+	 * @return
+	 */
+	private String pojoToJson( Object obj ) {
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		byte[] writeValueAsBytes = null;
+		try {
+			writeValueAsBytes = objectMapper.writeValueAsBytes( obj );
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		String jsonStr = new String( writeValueAsBytes, StandardCharsets.UTF_8 );
+		System.out.println( jsonStr );
+		return jsonStr;
 	}
 	
 	
