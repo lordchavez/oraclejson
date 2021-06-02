@@ -15,5 +15,7 @@ public interface ClienteService {
 	public String findJson();
 	
 	public Boolean updateJson();
+	
+	public Boolean insertJson();
 
 }
