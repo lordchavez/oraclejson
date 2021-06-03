@@ -13,7 +13,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "cliente")
-
 public class Cliente implements Serializable {
 
 	/**
@@ -23,9 +22,6 @@ public class Cliente implements Serializable {
 	
 	@Id
 	@Column(name = "ID")
-	@GeneratedValue(
-	        strategy = GenerationType.SEQUENCE
-	    )
 	private Long id;
 	
 	@Column(name = "ITEM")

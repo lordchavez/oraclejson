@@ -39,6 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.web.entity.Cliente;
 import com.web.entity.ClientePO;
+import com.web.entity.PaisPO;
 import com.web.repository.ClienteRepository;
 
 /**
@@ -66,6 +67,32 @@ public class ClienteServiceImpl implements ClienteService {
 		System.out.println("size=" + list.size());
 		Map<Long, Clob> map = list.stream().collect( Collectors.toMap( Cliente::getId, Cliente::getItem) );
 		return map;
+	}
+	
+	@Override
+	public String findById( Long id ) {
+		Cliente cliente = clienteRepository.findOne( id );
+		String clobStr = "";
+		try {
+			clobStr = cliente.getItem().getSubString( 1, ( int )cliente.getItem().length() );
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			ClientePO cpo = new ClientePO();
+			cpo = objectMapper.readValue( clobStr, ClientePO.class );
+			
+			List<PaisPO> list = cpo.getPais();
+			Stream<PaisPO> stream = list.stream();
+	        stream.forEach( p -> System.out.println( p ) );
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return clobStr;
 	}
 
 	@Override
@@ -134,15 +161,21 @@ public class ClienteServiceImpl implements ClienteService {
 		System.out.println("insertJson Started");
 		
 		ClientePO cpo = new ClientePO();
-		cpo.setId( 3L );
+		cpo.setId( 4L );
 		cpo.setFirst_name( "Robocop" );
 		cpo.setLast_name( "Murphy" );
 		cpo.setEmail( "robo@cop.com" );
 		cpo.setGender( "Male" );
 		cpo.setAge( 33 );
+		List<PaisPO> list = new ArrayList<PaisPO>();
+		PaisPO ppo = new PaisPO();
+		ppo.setId(2L);
+		ppo.setNombre( "Canada" );;
+		list.add( ppo );
+		cpo.setPais( list );
 		
 		Cliente cliente = new Cliente();
-		cliente.setId( 125L );
+		cliente.setId( 126L );
 		cliente.setItem( ClobProxy.generateProxy( pojoToJson( cpo ) ) );
 		
 		clienteRepository.saveAndFlush( cliente );
