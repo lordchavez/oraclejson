@@ -12,10 +12,14 @@ public interface ClienteService {
 	
 	public Map<Long, Clob> findByClient();
 	
+	public String findById( Long id );
+	
 	public String findJson();
 	
 	public Boolean updateJson();
 	
 	public Boolean insertJson();
+
+	public Boolean insert();
 
 }

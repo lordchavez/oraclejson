@@ -1,6 +1,7 @@
 package com.web.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ClientePO implements Serializable {
 
@@ -15,9 +16,10 @@ public class ClientePO implements Serializable {
 	private String email;
 	private String gender;
 	private Integer age;
+	private List<PaisPO> pais;	
 	
-	
-	public ClientePO(Long id, String first_name, String last_name, String email, String gender, Integer age) {
+	public ClientePO(Long id, String first_name, String last_name, String email, String gender, Integer age,
+			List<PaisPO> pais) {
 		super();
 		this.id = id;
 		this.first_name = first_name;
@@ -25,9 +27,10 @@ public class ClientePO implements Serializable {
 		this.email = email;
 		this.gender = gender;
 		this.age = age;
+		this.pais = pais;
 	}
-	
-	
+
+
 	public ClientePO() {
 		super();
 	}
@@ -107,12 +110,17 @@ public class ClientePO implements Serializable {
 	}
 
 	/**
-	 * toString
+	 * @return the pais
 	 */
-	@Override
-	public String toString() {
-		return "ClienteVO [id=" + id + ", first_name=" + first_name + ", last_name=" + last_name + ", email=" + email
-				+ ", gender=" + gender + ", age=" + age + "]";
+	public List<PaisPO> getPais() {
+		return pais;
+	}
+
+	/**
+	 * @param pais the pais to set
+	 */
+	public void setPais(List<PaisPO> pais) {
+		this.pais = pais;
 	}
 	
 }

@@ -95,6 +95,7 @@ public class PersistenceConfig {
 
 	@Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws ClassNotFoundException {
+		
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
 
         entityManagerFactory.setDataSource(dataSource());
